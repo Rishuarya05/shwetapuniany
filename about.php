@@ -11,7 +11,7 @@ include 'includes/header.php';
       <span class="kicker">About Us</span>
       <h1>Our Story</h1>
       <p>Helping souls heal, align and awaken their true potential through divine healing practices.</p>
-      <a href="<?php echo $WA_BOOK; ?>" target="_blank" rel="noopener" class="btn">Book a Session</a>
+      <a href="<?php echo $BOOK_URL; ?>" class="btn">Book a Session</a>
     </div>
     <div class="hero-media">
       <img src="assets/images/hero-shweta.png" alt="Shweta meditating among crystals, candles and lotus flowers">
@@ -164,7 +164,7 @@ include 'includes/header.php';
       <div class="soft-cta-copy">
         <h2>Let's Begin Your Journey Together</h2>
         <p>You don't have to have it all figured out before you begin. Healing begins with a single step.</p>
-        <a href="<?php echo $WA_BOOK; ?>" target="_blank" rel="noopener" class="btn">Book a Session</a>
+        <a href="<?php echo $BOOK_URL; ?>" class="btn">Book a Session</a>
       </div>
       <div class="soft-cta-img">
         <img src="assets/images/1st.jpeg" alt="Glowing amethyst crystals with candles">

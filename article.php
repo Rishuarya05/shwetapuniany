@@ -122,12 +122,12 @@ $articles = [
 
 $slug = isset($_GET['post']) ? $_GET['post'] : '';
 if (!isset($articles[$slug])) {
-  header('Location: blog.php');
+  header('Location: index.php');
   exit;
 }
 $a = $articles[$slug];
 
-$page = 'blog';
+$page = 'articles';
 $pageTitle = $a['title'] . ' — Shweta Puniany';
 include 'includes/header.php';
 ?>
@@ -148,9 +148,9 @@ include 'includes/header.php';
     <?php echo $a['body']; ?>
   </div>
   <div class="article-back">
-    <a class="link-more" href="blog.php">
+    <a class="link-more" href="index.php">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(180deg)"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      Back to the Journal
+      Back to the Home Page
     </a>
   </div>
 </article>

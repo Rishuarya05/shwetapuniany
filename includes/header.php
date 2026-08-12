@@ -6,11 +6,15 @@ $PHONE      = '+91 98765 43210';
 $EMAIL      = 'connect@shwetapuniany.com';
 $LOCATION   = 'Mumbai, India';
 $WA_NUMBER  = '919876543210'; // digits only, for wa.me links
-$WA_BOOK    = 'https://wa.me/' . $WA_NUMBER . '?text=' . rawurlencode("Hi Shweta, I'd like to book a healing session.");
 $WA_CHAT    = 'https://wa.me/' . $WA_NUMBER . '?text=' . rawurlencode("Hi Shweta, I have a question about your healing sessions.");
 
-$page      = $page      ?? '';
-$pageTitle = $pageTitle ?? $SITE_NAME . ' — ' . $SITE_TAG;
+/* Every "Book a Session" button goes to the booking form, which composes the
+   filled-in details into a WhatsApp message. Append ?s=<service-slug> to
+   pre-select a service. */
+$BOOK_URL   = 'book.php';
+
+$page       = $page      ?? '';
+$pageTitle  = $pageTitle ?? $SITE_NAME . ' — ' . $SITE_TAG;
 
 $navItems = [
   'home'         => ['Home', 'index.php'],
@@ -18,9 +22,11 @@ $navItems = [
   'services'     => ['Services', 'services.php'],
   'journey'      => ['Healing Journey', 'healing-journey.php'],
   'testimonials' => ['Testimonials', 'testimonials.php'],
-  'blog'         => ['Blog', 'blog.php'],
   'contact'      => ['Contact', 'contact.php'],
 ];
+
+/* Breadcrumb label — pages outside the nav (e.g. book.php) can set $crumbLabel themselves */
+$crumbLabel = $crumbLabel ?? ($navItems[$page][0] ?? '');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -69,15 +75,18 @@ $navItems = [
         <?php foreach ($navItems as $key => $item): ?>
           <li><a href="<?php echo $item[1]; ?>" class="<?php echo $page === $key ? 'active' : ''; ?>"><?php echo $item[0]; ?></a></li>
         <?php endforeach; ?>
-        <li class="nav-book"><a href="<?php echo $WA_BOOK; ?>" target="_blank" rel="noopener" class="btn">Book a Session</a></li>
+        <li class="nav-book"><a href="<?php echo $BOOK_URL; ?>" class="btn">Book a Session</a></li>
       </ul>
     </nav>
 
     <div class="header-cta">
-      <a href="<?php echo $WA_BOOK; ?>" target="_blank" rel="noopener" class="btn">Book a Session</a>
+      <a href="<?php echo $BOOK_URL; ?>" class="btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M16 2.5v4M8 2.5v4M3 10h18"/></svg>
+        <span class="cta-full">Book a Session</span><span class="cta-short">Book</span>
+      </a>
     </div>
   </div>
 </header>
-<?php if ($page && $page !== 'home' && isset($navItems[$page])): ?>
-<div class="crumb"><a href="index.php">Home</a><span class="c-sep">&rsaquo;</span><span><?php echo $navItems[$page][0]; ?></span></div>
+<?php if ($page && $page !== 'home' && $crumbLabel): ?>
+<div class="crumb"><a href="index.php">Home</a><span class="c-sep">&rsaquo;</span><span><?php echo $crumbLabel; ?></span></div>
 <?php endif; ?>

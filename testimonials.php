@@ -91,7 +91,7 @@ function stars() { ?>
   <div class="container">
     <div class="cta-copy">
       <h2 class="serif">Your Story Could Begin Here.</h2>
-      <a href="<?php echo $WA_BOOK; ?>" target="_blank" rel="noopener" class="btn">Book a Healing Session</a>
+      <a href="<?php echo $BOOK_URL; ?>" class="btn">Book a Healing Session</a>
     </div>
     <img class="cta-art art-blend" src="assets/images/cta-lotus-hd.png" alt="" aria-hidden="true">
   </div>

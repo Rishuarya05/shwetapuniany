@@ -11,7 +11,7 @@ include 'includes/header.php';
       <span class="kicker">About Shweta</span>
       <h1>A Journey of <br>Healing, Awareness &amp; <br>Transformation</h1>
       <p>Discover my personal journey into Chakra Healing and Pendulum Healing, and the intention behind creating a safe space for emotional and energetic transformation.</p>
-      <a href="<?php echo $WA_BOOK; ?>" target="_blank" rel="noopener" class="btn">
+      <a href="<?php echo $BOOK_URL; ?>" class="btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         Book a Healing Session
       </a>

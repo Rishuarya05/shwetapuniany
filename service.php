@@ -91,7 +91,7 @@ $pageTitle = $s['title'] . ' — Shweta Puniany';
 include 'includes/header.php';
 
 $body = str_replace('{{DIFF}}', $diffBlock, $s['body']);
-$waThis = 'https://wa.me/' . $WA_NUMBER . '?text=' . rawurlencode("Hi Shweta, I'd like to book a " . $s['title'] . " session.");
+$bookThis = $BOOK_URL . '?s=' . urlencode($slug); // pre-selects this service on the booking form
 ?>
 
 <!-- ============ Service hero ============ -->
@@ -112,7 +112,7 @@ $waThis = 'https://wa.me/' . $WA_NUMBER . '?text=' . rawurlencode("Hi Shweta, I'
   <p class="svc-tagline"><?php echo $s['tagline']; ?></p>
 
   <div class="svc-detail-cta">
-    <a href="<?php echo $waThis; ?>" target="_blank" rel="noopener" class="btn">
+    <a href="<?php echo $bookThis; ?>" class="btn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
       Book This Session
     </a>

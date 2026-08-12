@@ -182,4 +182,264 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  /* ==========================================================================
+     Booking → WhatsApp
+     The same form markup is used by the popup (every page) and by book.php,
+     so everything below is scoped per-form instead of by id.
+     ========================================================================== */
+  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+  var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  /* "2026-08-20" → "20 August 2026 (Thursday)", built from parts so the date is
+     never shifted by the browser's timezone */
+  var prettyDate = function (raw) {
+    var p = raw.split('-');
+    if (p.length !== 3) return raw;
+    var d = new Date(+p[0], +p[1] - 1, +p[2]);
+    if (isNaN(d.getTime())) return raw;
+    return d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear() + ' (' + DAYS[d.getDay()] + ')';
+  };
+
+  var scrollToEl = function (el) {
+    el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+  };
+
+  var initBookingForm = function (form) {
+    var shell = form.closest('.book-shell');
+    var formPane = shell.querySelector('.book-form-pane');
+    var donePane = shell.querySelector('.book-done');
+    var summaryEl = donePane.querySelector('.bd-summary');
+    var hintEl = donePane.querySelector('.bd-hint');
+
+    var field = function (name) { return form.querySelector('[name="' + name + '"]'); };
+    var val = function (name) { var el = field(name); return el ? el.value.trim() : ''; };
+
+    /* selects carry slugs as values — the message needs the human-readable text */
+    var label = function (name) {
+      var el = field(name);
+      if (!el || !el.value) return '';
+      return el.tagName === 'SELECT' ? el.options[el.selectedIndex].text.trim() : el.value.trim();
+    };
+
+    var syncSelect = function (sel) { sel.classList.toggle('filled', !!sel.value); };
+
+    form.querySelectorAll('select').forEach(function (sel) {
+      syncSelect(sel);
+      sel.addEventListener('change', function () { syncSelect(sel); });
+    });
+
+    var phoneEl = field('phone');
+    if (phoneEl) {
+      phoneEl.addEventListener('input', function () {
+        phoneEl.value = phoneEl.value.replace(/\D/g, '').slice(0, 10);
+      });
+    }
+
+    /* clear a field's error as soon as the visitor edits it */
+    form.querySelectorAll('input, select, textarea').forEach(function (el) {
+      var clear = function () {
+        var wrap = el.closest('.bf-field');
+        if (wrap) wrap.classList.remove('invalid');
+      };
+      el.addEventListener('input', clear);
+      el.addEventListener('change', clear);
+    });
+
+    var validate = function () {
+      var bad = [];
+      var check = function (name, ok) {
+        var el = field(name);
+        if (!el) return;
+        var wrap = el.closest('.bf-field');
+        if (wrap) wrap.classList.toggle('invalid', !ok);
+        if (!ok) bad.push(el);
+      };
+
+      check('name', val('name').length >= 2);
+      check('email', /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val('email')));
+      check('phone', /^[6-9]\d{9}$/.test(val('phone')));
+      check('service', val('service') !== '');
+      check('date', val('date') !== '');
+      check('time', val('time') !== '');
+
+      if (bad.length) {
+        bad[0].focus({ preventScroll: true });
+        scrollToEl(bad[0].closest('.bf-field') || bad[0]);
+      }
+      return bad.length === 0;
+    };
+
+    var reset = function () {
+      form.reset();
+      form.querySelectorAll('.invalid').forEach(function (w) { w.classList.remove('invalid'); });
+      form.querySelectorAll('select').forEach(syncSelect);
+      donePane.hidden = true;
+      formPane.hidden = false;
+    };
+
+    /* let the modal controller put the form back to a clean state */
+    shell.bookingReset = reset;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!validate()) return;
+
+      var name = val('name');
+      var rows = [
+        ['Name', name],
+        ['Phone', '+91 ' + val('phone')],
+        ['Email', val('email')],
+        ['Service', label('service')],
+        ['Preferred Date', prettyDate(val('date'))],
+        ['Preferred Time', label('time')]
+      ];
+      if (val('message')) rows.push(['Message', val('message')]);
+
+      var lines = ['*New Session Booking Request*', ''];
+      rows.forEach(function (r) { lines.push(r[0] + ': ' + r[1]); });
+      lines.push('', 'Sent from the website booking form. Please confirm my slot.');
+
+      var waUrl = 'https://wa.me/' + form.getAttribute('data-wa') +
+                  '?text=' + encodeURIComponent(lines.join('\n'));
+
+      summaryEl.innerHTML = '';
+      rows.forEach(function (r) {
+        var li = document.createElement('li');
+        var k = document.createElement('span');
+        k.className = 'bd-k';
+        k.textContent = r[0];
+        var v = document.createElement('span');
+        v.className = 'bd-v';
+        v.textContent = r[1];
+        li.appendChild(k);
+        li.appendChild(v);
+        summaryEl.appendChild(li);
+      });
+
+      donePane.querySelector('.bd-name').textContent = name.split(' ')[0];
+      donePane.querySelectorAll('.bd-wa').forEach(function (a) { a.href = waUrl; });
+
+      var win = window.open(waUrl, '_blank');
+      hintEl.hidden = !!win; // only nudge them if the tab was blocked
+
+      formPane.hidden = true;
+      donePane.hidden = false;
+      scrollToEl(donePane);
+    });
+
+    donePane.querySelector('.bd-again').addEventListener('click', function () {
+      reset();
+      scrollToEl(formPane);
+    });
+  };
+
+  document.querySelectorAll('.book-form').forEach(initBookingForm);
+
+  /* ---------- Booking popup ---------- */
+  var modal = document.getElementById('bookModal');
+
+  if (modal) {
+    var dialog = modal.querySelector('.bm-dialog');
+    var shell = modal.querySelector('.book-shell');
+    var lastTrigger = null;
+
+    var openBooking = function (slug, trigger) {
+      lastTrigger = trigger || null;
+
+      if (shell.bookingReset) shell.bookingReset();
+
+      var sel = modal.querySelector('[name="service"]');
+      if (sel && slug) {
+        sel.value = slug;
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      modal.hidden = false;
+      document.documentElement.classList.add('book-locked');
+      dialog.scrollTop = 0;
+
+      // focus the dialog rather than the first input, so mobile keyboards
+      // don't spring open the moment the popup appears
+      dialog.focus({ preventScroll: true });
+    };
+
+    var closeBooking = function () {
+      modal.hidden = true;
+      document.documentElement.classList.remove('book-locked');
+      if (lastTrigger) { lastTrigger.focus({ preventScroll: true }); lastTrigger = null; }
+    };
+
+    modal.querySelectorAll('[data-book-close]').forEach(function (el) {
+      el.addEventListener('click', closeBooking);
+    });
+
+    /* Every "Book a Session" link points at book.php, so it still works with
+       JavaScript off; here we intercept it and open the popup instead. */
+    document.addEventListener('click', function (e) {
+      var trigger = e.target.closest('a[href^="book.php"]');
+      if (!trigger) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // open-in-new-tab
+      e.preventDefault();
+
+      var m = (trigger.getAttribute('href') || '').match(/[?&]s=([^&#]+)/);
+      openBooking(m ? decodeURIComponent(m[1]) : '', trigger);
+
+      // if the tap came from the mobile menu, fold it away behind the popup
+      if (nav && nav.classList.contains('open')) {
+        nav.classList.remove('open');
+        if (toggle) {
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (modal.hidden) return;
+
+      if (e.key === 'Escape') { closeBooking(); return; }
+
+      /* keep tabbing inside the dialog while it is open */
+      if (e.key !== 'Tab') return;
+      var focusable = dialog.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      var open = Array.prototype.filter.call(focusable, function (el) {
+        return !el.disabled && el.offsetParent !== null;
+      });
+      if (!open.length) return;
+      var first = open[0], last = open[open.length - 1];
+      if (e.shiftKey && (document.activeElement === first || document.activeElement === dialog)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
+  } else {
+    /* book.php carries the form inline and has no popup, so the same links
+       should walk down to that form rather than reload the page. */
+    var inlineShell = document.querySelector('.book-shell');
+
+    if (inlineShell) {
+      document.addEventListener('click', function (e) {
+        var trigger = e.target.closest('a[href^="book.php"]');
+        if (!trigger) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+
+        var sel = inlineShell.querySelector('[name="service"]');
+        var m = (trigger.getAttribute('href') || '').match(/[?&]s=([^&#]+)/);
+        if (sel && m) {
+          sel.value = decodeURIComponent(m[1]);
+          sel.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        scrollToEl(inlineShell);
+      });
+    }
+  }
+
 });

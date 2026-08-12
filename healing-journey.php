@@ -94,7 +94,7 @@ $experiences = [
     <div class="pace-copy">
       <h2>Your Journey, Your Pace</h2>
       <p>There is no right or wrong way to heal. Trust the process and honor where you are.</p>
-      <a href="<?php echo $WA_BOOK; ?>" target="_blank" rel="noopener" class="btn">Book a Session</a>
+      <a href="<?php echo $BOOK_URL; ?>" class="btn">Book a Session</a>
     </div>
     <div class="pace-img">
       <img src="assets/images/21th.jpeg" alt="An amethyst crystal glowing beside a candle" class="art-blend">

@@ -123,7 +123,7 @@ include 'includes/header.php';
         <li><span class="check"><svg viewBox="0 0 24 24"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg></span>Inner awareness &amp; alignment</li>
         <li><span class="check"><svg viewBox="0 0 24 24"><path d="m4 12.5 5.5 5.5L20 6.5"/></svg></span>Personal growth &amp; transformation</li>
       </ul>
-      <a href="<?php echo $WA_BOOK; ?>" target="_blank" rel="noopener" class="btn">Book Your Session</a>
+      <a href="<?php echo $BOOK_URL; ?>" class="btn">Book Your Session</a>
     </div>
   </div>
 </section>
