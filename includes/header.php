@@ -69,6 +69,7 @@ $navItems = [
         <?php foreach ($navItems as $key => $item): ?>
           <li><a href="<?php echo $item[1]; ?>" class="<?php echo $page === $key ? 'active' : ''; ?>"><?php echo $item[0]; ?></a></li>
         <?php endforeach; ?>
+        <li class="nav-book"><a href="<?php echo $WA_BOOK; ?>" target="_blank" rel="noopener" class="btn">Book a Session</a></li>
       </ul>
     </nav>
 
@@ -77,3 +78,6 @@ $navItems = [
     </div>
   </div>
 </header>
+<?php if ($page && $page !== 'home' && isset($navItems[$page])): ?>
+<div class="crumb"><a href="index.php">Home</a><span class="c-sep">&rsaquo;</span><span><?php echo $navItems[$page][0]; ?></span></div>
+<?php endif; ?>

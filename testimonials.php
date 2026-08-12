@@ -29,6 +29,9 @@ function stars() { ?>
       <hr class="hero-divider">
       <p>Real experiences from beautiful souls who chose to begin their healing journey.</p>
     </div>
+    <div class="hero-media m-banner">
+      <img src="assets/images/1st.jpeg" alt="Amethyst crystals with lit candles">
+    </div>
   </div>
 </section>
 

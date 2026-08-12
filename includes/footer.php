@@ -59,12 +59,12 @@ $ctaArt     = $ctaArt     ?? 'cta-lotus-hd.png';
     <div class="footer-col">
       <h4>Services</h4>
       <ul>
-        <li><a href="services.php">Chakra Healing</a></li>
-        <li><a href="services.php">Pendulum Healing</a></li>
-        <li><a href="services.php">Distance Healing</a></li>
-        <li><a href="services.php">Energy Cleansing</a></li>
-        <li><a href="services.php">Aura Cleansing</a></li>
-        <li><a href="services.php">Crystal Healing</a></li>
+        <li><a href="service.php?s=chakra-healing">Chakra Healing</a></li>
+        <li><a href="service.php?s=pendulum-healing">Pendulum Healing</a></li>
+        <li><a href="service.php?s=distance-healing">Distance Healing</a></li>
+        <li><a href="service.php?s=energy-cleansing">Energy Cleansing</a></li>
+        <li><a href="service.php?s=aura-cleansing">Aura Cleansing</a></li>
+        <li><a href="service.php?s=personalised-healing">Personalised Healing</a></li>
       </ul>
     </div>
 

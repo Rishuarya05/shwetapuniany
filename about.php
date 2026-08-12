@@ -5,7 +5,7 @@ include 'includes/header.php';
 ?>
 
 <!-- ============ Hero ============ -->
-<section class="page-hero">
+<section class="page-hero no-m-media">
   <div class="container">
     <div class="hero-copy">
       <span class="kicker">About Us</span>

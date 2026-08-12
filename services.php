@@ -1,11 +1,7 @@
-<?php
+﻿<?php
 $page = 'services';
 $pageTitle = 'Services — Shweta Puniany';
 include 'includes/header.php';
-
-$waLearn = function ($service) use ($WA_NUMBER) {
-  return 'https://wa.me/' . $WA_NUMBER . '?text=' . rawurlencode("Hi Shweta, I'd like to know more about " . $service . ".");
-};
 ?>
 
 <!-- ============ Hero ============ -->
@@ -16,6 +12,9 @@ $waLearn = function ($service) use ($WA_NUMBER) {
       <h1>Healing Modalities for <br>Mind, Body &amp; Soul</h1>
       <hr class="hero-divider">
       <p>Explore powerful healing practices designed to restore balance, release blockages and bring you back to alignment.</p>
+    </div>
+    <div class="hero-media m-banner">
+      <img src="assets/images/15th.jpeg" alt="A crystal pendulum above a white lotus">
     </div>
   </div>
 </section>
@@ -30,7 +29,7 @@ $waLearn = function ($service) use ($WA_NUMBER) {
         <div class="svc-num">01</div>
         <h3>Chakra Healing</h3>
         <p>Balance and activate your seven chakras to restore energy flow and inner harmony.</p>
-        <a class="link-more" href="<?php echo $waLearn('Chakra Healing'); ?>" target="_blank" rel="noopener">Learn More
+        <a class="link-more" href="service.php?s=chakra-healing">Learn More
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
         <div class="svc-art">
@@ -43,7 +42,7 @@ $waLearn = function ($service) use ($WA_NUMBER) {
         <div class="svc-num">02</div>
         <h3>Pendulum Healing</h3>
         <p>Using the power of pendulum to identify and heal energetic imbalances.</p>
-        <a class="link-more" href="<?php echo $waLearn('Pendulum Healing'); ?>" target="_blank" rel="noopener">Learn More
+        <a class="link-more" href="service.php?s=pendulum-healing">Learn More
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
         <div class="svc-art svc-art-img">
@@ -56,7 +55,7 @@ $waLearn = function ($service) use ($WA_NUMBER) {
         <div class="svc-num">03</div>
         <h3>Distance Healing</h3>
         <p>Experience powerful energy healing performed remotely for your well-being.</p>
-        <a class="link-more" href="<?php echo $waLearn('Distance Healing'); ?>" target="_blank" rel="noopener">Learn More
+        <a class="link-more" href="service.php?s=distance-healing">Learn More
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
         <div class="svc-art">
@@ -69,7 +68,7 @@ $waLearn = function ($service) use ($WA_NUMBER) {
         <div class="svc-num">04</div>
         <h3>Energy Cleansing</h3>
         <p>Remove negative energies, clear blockages and invite peace and positivity.</p>
-        <a class="link-more" href="<?php echo $waLearn('Energy Cleansing'); ?>" target="_blank" rel="noopener">Learn More
+        <a class="link-more" href="service.php?s=energy-cleansing">Learn More
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
         <div class="svc-art">
@@ -82,7 +81,7 @@ $waLearn = function ($service) use ($WA_NUMBER) {
         <div class="svc-num">05</div>
         <h3>Aura Cleansing</h3>
         <p>Cleansing and strengthening your aura for protection and well-being.</p>
-        <a class="link-more" href="<?php echo $waLearn('Aura Cleansing'); ?>" target="_blank" rel="noopener">Learn More
+        <a class="link-more" href="service.php?s=aura-cleansing">Learn More
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
         <div class="svc-art">
@@ -96,7 +95,7 @@ $waLearn = function ($service) use ($WA_NUMBER) {
           <div class="svc-num">06</div>
           <h3>Personalized Healing</h3>
           <p style="max-width:340px;">Each session is uniquely designed for you, based on your energy, needs and intentions.</p>
-          <a class="link-more" href="<?php echo $waLearn('Personalized Healing'); ?>" target="_blank" rel="noopener">Learn More
+          <a class="link-more" href="service.php?s=personalised-healing">Learn More
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>

@@ -4,12 +4,12 @@ $pageTitle = 'Blog — Shweta Puniany';
 include 'includes/header.php';
 
 $posts = [
-  ['cat' => 'chakra',   'label' => 'Chakra Healing',   'title' => 'What Are Chakras<br>&amp; Why Do They Matter?', 'date' => 'May 12, 2024', 'img' => '8th.jpeg',  'slug' => 'what-are-chakras-and-why-do-they-matter'],
-  ['cat' => 'energy',   'label' => 'Energy',           'title' => 'Understanding<br>Energy Blockages',            'date' => 'May 18, 2024', 'img' => '9th.jpeg',  'slug' => 'understanding-energy-blockages'],
-  ['cat' => 'pendulum', 'label' => 'Pendulum Healing', 'title' => 'How Pendulum<br>Healing Works',                'date' => 'May 08, 2024', 'img' => '10th.jpeg', 'slug' => 'how-pendulum-healing-works'],
-  ['cat' => 'self',     'label' => 'Self Healing',     'title' => 'Signs You Need<br>Emotional Rest',             'date' => 'May 05, 2024', 'img' => '11th.jpeg', 'slug' => 'signs-you-need-emotional-rest'],
-  ['cat' => 'energy',   'label' => 'Energy',           'title' => 'Creating an Energetic<br>Morning Ritual',      'date' => 'Apr 30, 2024', 'img' => '12th.jpeg', 'slug' => 'creating-an-energetic-morning-ritual'],
-  ['cat' => 'chakra',   'label' => 'Chakra Healing',   'title' => 'What Happens During<br>a Healing Session?',    'date' => 'Apr 28, 2024', 'img' => '13th.jpeg', 'slug' => 'what-happens-during-a-healing-session'],
+  ['cat' => 'chakra',   'label' => 'Chakra Healing',   'title' => 'What Are Chakras <br>&amp; Why Do They Matter?', 'date' => 'May 12, 2024', 'img' => '8th.jpeg',  'slug' => 'what-are-chakras-and-why-do-they-matter'],
+  ['cat' => 'energy',   'label' => 'Energy',           'title' => 'Understanding <br>Energy Blockages',            'date' => 'May 18, 2024', 'img' => '9th.jpeg',  'slug' => 'understanding-energy-blockages'],
+  ['cat' => 'pendulum', 'label' => 'Pendulum Healing', 'title' => 'How Pendulum <br>Healing Works',                'date' => 'May 08, 2024', 'img' => '10th.jpeg', 'slug' => 'how-pendulum-healing-works'],
+  ['cat' => 'self',     'label' => 'Self Healing',     'title' => 'Signs You Need <br>Emotional Rest',             'date' => 'May 05, 2024', 'img' => '11th.jpeg', 'slug' => 'signs-you-need-emotional-rest'],
+  ['cat' => 'energy',   'label' => 'Energy',           'title' => 'Creating an Energetic <br>Morning Ritual',      'date' => 'Apr 30, 2024', 'img' => '12th.jpeg', 'slug' => 'creating-an-energetic-morning-ritual'],
+  ['cat' => 'chakra',   'label' => 'Chakra Healing',   'title' => 'What Happens During <br>a Healing Session?',    'date' => 'Apr 28, 2024', 'img' => '13th.jpeg', 'slug' => 'what-happens-during-a-healing-session'],
 ];
 ?>
 
@@ -20,6 +20,9 @@ $posts = [
       <span class="kicker">From the Journal</span>
       <h1>Thoughts for Your <br>Healing Journey</h1>
       <p>Insights, guidance and gentle reminders to support your inner growth and transformation.</p>
+    </div>
+    <div class="hero-media m-banner">
+      <img src="assets/images/6th.jpeg" alt="An open book beside a candle, crystals and lavender">
     </div>
   </div>
 </section>

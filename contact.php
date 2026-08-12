@@ -26,6 +26,9 @@ $faqs = [
       <hr class="hero-divider">
       <p>Have a question about a healing session or want to understand which modality may be right for you? Reach out. I'm here for you.</p>
     </div>
+    <div class="hero-media m-banner">
+      <img src="assets/images/4th.jpeg" alt="Amethyst crystals beside a lit candle">
+    </div>
   </div>
 </section>
 

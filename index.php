@@ -170,6 +170,15 @@ include 'includes/header.php';
   </div>
 </section>
 
+<!-- ============ Moments strip ============ -->
+<section class="photo-strip">
+  <div class="container">
+    <div class="ps-item"><img src="assets/images/22nd.jpeg" alt="Shweta preparing a singing bowl ritual" loading="lazy"></div>
+    <div class="ps-item"><img src="assets/images/12th.jpeg" alt="A candlelit healing altar with a pendulum" loading="lazy"></div>
+    <div class="ps-item"><img src="assets/images/13th.jpeg" alt="A quiet moment of reflection in a garden" loading="lazy"></div>
+  </div>
+</section>
+
 <!-- ============ Trust strip ============ -->
 <section class="trust-strip">
   <div class="container trust-inner">
