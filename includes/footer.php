@@ -11,7 +11,7 @@ $ctaArt     = $ctaArt     ?? 'cta-lotus-hd.png';
 <section class="cta-band">
   <div class="container">
     <h2 class="serif"><?php echo $ctaText; ?></h2>
-    <a href="<?php echo $WA_BOOK; ?>" target="_blank" rel="noopener" class="btn"><?php echo $ctaBtnText; ?></a>
+    <a href="<?php echo $BOOK_URL; ?>" class="btn"><?php echo $ctaBtnText; ?></a>
     <img class="cta-art art-blend" src="assets/images/<?php echo $ctaArt; ?>" alt="" aria-hidden="true">
   </div>
 </section>
@@ -51,14 +51,7 @@ $ctaArt     = $ctaArt     ?? 'cta-lotus-hd.png';
         <li><a href="services.php">Services</a></li>
         <li><a href="healing-journey.php">Healing Journey</a></li>
         <li><a href="testimonials.php">Testimonials</a></li>
-        <li><a href="blog.php">Blog</a></li>
-        <li><a href="contact.php">Contact</a></li>
-      </ul>
-    </div>
 
-    <div class="footer-col">
-      <h4>Services</h4>
-      <ul>
         <li><a href="service.php?s=chakra-healing">Chakra Healing</a></li>
         <li><a href="service.php?s=pendulum-healing">Pendulum Healing</a></li>
         <li><a href="service.php?s=distance-healing">Distance Healing</a></li>
@@ -112,6 +105,26 @@ $ctaArt     = $ctaArt     ?? 'cta-lotus-hd.png';
     </div>
   </div>
 </footer>
+
+<?php if ($page !== 'book'): /* book.php shows the form inline instead */ ?>
+<!-- Booking popup — opened by every "Book a Session" button on the page -->
+<div class="book-modal" id="bookModal" hidden>
+  <div class="bm-backdrop" data-book-close></div>
+  <div class="bm-dialog" role="dialog" aria-modal="true" aria-labelledby="bmTitle">
+    <button type="button" class="bm-close" data-book-close aria-label="Close booking form">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div class="bm-head">
+      <span class="book-orn" aria-hidden="true"></span>
+      <h2 id="bmTitle">Book Your <em>Session</em></h2>
+      <p>Take the first step towards inner peace and holistic well-being.</p>
+    </div>
+    <div class="bm-body">
+      <?php include __DIR__ . '/booking-form.php'; ?>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
 
 <script src="assets/js/main.js?v=<?php echo filemtime(__DIR__ . '/../assets/js/main.js'); ?>"></script>
 </body>
