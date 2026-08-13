@@ -209,7 +209,7 @@ $trustPoints = [
 
     <div class="bd-actions">
       <a class="btn bd-wa" href="#" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.36A10 10 0 1 0 12 2z"/></svg>
+        <img class="wa-glyph" src="assets/images/wpicon.png" alt="" width="16" height="16" decoding="async">
         Open WhatsApp
       </a>
       <button type="button" class="btn-ghost bd-again">Book another session</button>

@@ -122,6 +122,9 @@ h1, h2, h3, .serif { font-family: var(--serif); color: var(--ink); font-weight: 
 
 .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
+/* WhatsApp brand mark used in place of a stroked glyph inside buttons */
+.btn .wa-glyph { width: 17px; height: 17px; flex-shrink: 0; object-fit: contain; }
+
 /* Text link with arrow — LEARN MORE / READ ARTICLE */
 .link-more {
   display: inline-flex;
@@ -491,7 +494,7 @@ h1, h2, h3, .serif { font-family: var(--serif); color: var(--ink); font-weight: 
 
 .footer-contact .wa-link { color: var(--gold-pale); font-weight: 600; }
 .footer-contact .wa-link:hover { color: #f2cd85; }
-.footer-contact .wa-ico svg { stroke: #4fce5d; }
+.footer-contact .wa-ico img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
 .footer-news p { font-size: 12.5px; margin-bottom: 12px; }
 
@@ -1045,7 +1048,7 @@ h1, h2, h3, .serif { font-family: var(--serif); color: var(--ink); font-weight: 
 
 .lc-ico svg { width: 100%; height: 100%; stroke: var(--purple); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 
-.lc-ico.wa svg { stroke: #35b04a; }
+.lc-ico.wa img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
 .lc-item h4 {
   font-family: var(--sans);

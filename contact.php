@@ -71,7 +71,7 @@ $faqs = [
 
       <div class="lc-item">
         <span class="lc-ico wa">
-          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.36A10 10 0 1 0 12 2z"/><path d="M8.6 7.8c.2-.45.4-.46.6-.47h.5c.17 0 .4-.06.6.47.23.53.74 1.83.8 1.96.07.13.11.29.02.47-.53 1.06-1.1.98-.53 1.96a7.3 7.3 0 0 0 2.87 2.63c.34.17.54.14.74-.09.2-.22.85-.98 1.07-1.32.23-.34.45-.28.76-.17.3.11 1.93.9 2.26 1.07"/></svg>
+          <img src="assets/images/wpicon.png" alt="" width="30" height="30" loading="lazy" decoding="async">
         </span>
         <div>
           <h4>WhatsApp</h4>
