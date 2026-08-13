@@ -106,19 +106,22 @@ $ctaArt     = $ctaArt     ?? 'cta-lotus-hd.png';
   </div>
 </footer>
 
+<!-- Floating WhatsApp button — opens the same booking form as every other CTA -->
+<div class="wa-float" id="waFloat">
+  <a class="wa-float-btn" href="book.php" aria-label="Book your session on WhatsApp">
+    <img src="assets/images/wpicon.png" alt="" width="34" height="34" decoding="async">
+  </a>
+  <span class="wa-float-tip" aria-hidden="true">Book Your Session Now</span>
+</div>
+
 <?php if ($page !== 'book'): /* book.php shows the form inline instead */ ?>
 <!-- Booking popup — opened by every "Book a Session" button on the page -->
 <div class="book-modal" id="bookModal" hidden>
   <div class="bm-backdrop" data-book-close></div>
-  <div class="bm-dialog" role="dialog" aria-modal="true" aria-labelledby="bmTitle">
+  <div class="bm-dialog" role="dialog" aria-modal="true" aria-label="Book your session">
     <button type="button" class="bm-close" data-book-close aria-label="Close booking form">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
     </button>
-    <div class="bm-head">
-      <span class="book-orn" aria-hidden="true"></span>
-      <h2 id="bmTitle">Book Your <em>Session</em></h2>
-      <p>Take the first step towards inner peace and holistic well-being.</p>
-    </div>
     <div class="bm-body">
       <?php include __DIR__ . '/booking-form.php'; ?>
     </div>

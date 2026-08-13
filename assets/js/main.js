@@ -205,6 +205,226 @@ document.addEventListener('DOMContentLoaded', function () {
     el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
   };
 
+  /* ---------- Service picker ----------
+     A native <select> drops an OS-drawn list that no stylesheet can reach, so
+     the list is rebuilt here as a listbox. The <select> stays exactly where it
+     was and goes on holding the value, which means prefilling, validation and
+     the WhatsApp message all keep working untouched — and if this never runs,
+     visitors simply get the plain select.
+
+     The panel is parked on <body> and positioned fixed so the popup's scroll
+     box can never clip it. */
+  var initServicePicker = function (select) {
+    var field   = select.closest('.bf-field');
+    var tpl     = field && field.querySelector('.bf-opt-tpl');
+    var box     = field && field.querySelector('.bf-box');
+    var inner   = select.parentNode;
+    var labelEl = inner.querySelector('label');
+    if (!tpl || !box || !labelEl || !('content' in tpl)) return;
+
+    var form = select.form;
+    var placeholder = select.options[0] ? select.options[0].text : 'Select a service';
+
+    var trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'bf-pick';
+    trigger.id = select.id + '-btn';
+    trigger.setAttribute('aria-haspopup', 'listbox');
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.setAttribute('aria-labelledby', labelEl.id + ' ' + trigger.id);
+
+    var valueEl = document.createElement('span');
+    valueEl.className = 'bf-pick-val';
+    trigger.appendChild(valueEl);
+    inner.insertBefore(trigger, select);
+
+    var menu = document.createElement('ul');
+    menu.className = 'bf-menu';
+    menu.setAttribute('role', 'listbox');
+    menu.setAttribute('aria-labelledby', labelEl.id);
+    menu.hidden = true;
+    menu.appendChild(tpl.content.cloneNode(true));
+    document.body.appendChild(menu);
+    tpl.remove();
+
+    var opts = Array.prototype.slice.call(menu.querySelectorAll('.bf-opt'));
+    opts.forEach(function (o, i) { o.id = select.id + '-opt-' + i; });
+
+    /* the select is about to leave the page, so the label loses its `for` and
+       drives the trigger instead */
+    labelEl.removeAttribute('for');
+    labelEl.addEventListener('click', function () { toggle(); });
+
+    select.hidden = true;
+    select.pickTrigger = trigger; // so a failed check focuses something visible
+
+    var sync = function () {
+      var chosen = null;
+      opts.forEach(function (o) {
+        var on = select.value !== '' && o.getAttribute('data-value') === select.value;
+        o.classList.toggle('chosen', on);
+        o.setAttribute('aria-selected', on ? 'true' : 'false');
+        if (on) chosen = o;
+      });
+      valueEl.textContent = chosen ? chosen.querySelector('.bf-opt-txt').textContent : placeholder;
+      valueEl.classList.toggle('is-placeholder', !chosen);
+    };
+
+    var active = -1;
+    var setActive = function (i) {
+      if (!opts.length) return;
+      active = (i + opts.length) % opts.length;
+      opts.forEach(function (o, n) { o.classList.toggle('active', n === active); });
+
+      var el = opts[active];
+      menu.setAttribute('aria-activedescendant', el.id);
+      if (el.offsetTop < menu.scrollTop) {
+        menu.scrollTop = el.offsetTop;
+      } else if (el.offsetTop + el.offsetHeight > menu.scrollTop + menu.clientHeight) {
+        menu.scrollTop = el.offsetTop + el.offsetHeight - menu.clientHeight;
+      }
+    };
+
+    /* drop downwards unless the field is low on the screen */
+    var place = function () {
+      var r = box.getBoundingClientRect();
+      var below = window.innerHeight - r.bottom - 14;
+      var above = r.top - 14;
+      var up = below < 210 && above > below;
+
+      menu.classList.toggle('drop-up', up);
+      menu.style.left = r.left + 'px';
+      menu.style.width = r.width + 'px';
+      menu.style.maxHeight = Math.max(132, Math.min(310, up ? above : below)) + 'px';
+
+      if (up) {
+        menu.style.top = 'auto';
+        menu.style.bottom = (window.innerHeight - r.top + 6) + 'px';
+      } else {
+        menu.style.bottom = 'auto';
+        menu.style.top = (r.bottom + 6) + 'px';
+      }
+    };
+
+    var isOpen = function () { return !menu.hidden; };
+
+    var open = function () {
+      if (isOpen()) return;
+      menu.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+      field.classList.add('picking');
+      place();
+
+      var start = 0;
+      opts.forEach(function (o, i) { if (o.classList.contains('chosen')) start = i; });
+      setActive(start);
+    };
+
+    var close = function (refocus) {
+      if (!isOpen()) return;
+      menu.hidden = true;
+      menu.removeAttribute('aria-activedescendant');
+      trigger.setAttribute('aria-expanded', 'false');
+      field.classList.remove('picking');
+      if (refocus) trigger.focus({ preventScroll: true });
+    };
+
+    var toggle = function () {
+      if (isOpen()) { close(true); return; }
+      trigger.focus({ preventScroll: true });
+      open();
+    };
+
+    var choose = function (o) {
+      select.value = o.getAttribute('data-value');
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+      close(true);
+    };
+
+    trigger.addEventListener('click', toggle);
+
+    menu.addEventListener('click', function (e) {
+      var o = e.target.closest('.bf-opt');
+      if (o) choose(o);
+    });
+
+    menu.addEventListener('mousemove', function (e) {
+      var o = e.target.closest('.bf-opt');
+      if (o) setActive(opts.indexOf(o));
+    });
+
+    /* type-ahead — "p" jumps to Pendulum */
+    var typed = '', typedAt = 0;
+    var jumpTo = function (ch) {
+      var now = Date.now();
+      typed = (now - typedAt < 900 ? typed : '') + ch;
+      typedAt = now;
+
+      /* one letter held down cycles through its matches, the way a native
+         select behaves; distinct letters extend the search instead */
+      var same = typed.split('').every(function (c) { return c === typed.charAt(0); });
+      var needle = same ? typed.charAt(0) : typed;
+      var from = same ? 1 : 0; // cycling starts past the current item
+
+      for (var i = 0; i < opts.length; i++) {
+        var n = (active + from + i) % opts.length;
+        if (opts[n].querySelector('.bf-opt-txt').textContent.toLowerCase().indexOf(needle) === 0) {
+          setActive(n);
+          return;
+        }
+      }
+    };
+
+    trigger.addEventListener('keydown', function (e) {
+      var k = e.key;
+
+      if (!isOpen()) {
+        if (k === 'ArrowDown' || k === 'ArrowUp' || k === 'Enter' || k === ' ') {
+          e.preventDefault();
+          open();
+        }
+        return;
+      }
+
+      // Escape must not travel on to the popup, or the whole form would close
+      if (k === 'Escape') { e.preventDefault(); e.stopPropagation(); close(true); return; }
+      if (k === 'Tab') { close(false); return; }
+      if (k === 'ArrowDown') { e.preventDefault(); setActive(active + 1); return; }
+      if (k === 'ArrowUp') { e.preventDefault(); setActive(active - 1); return; }
+      if (k === 'Home') { e.preventDefault(); setActive(0); return; }
+      if (k === 'End') { e.preventDefault(); setActive(opts.length - 1); return; }
+      if (k === 'Enter' || k === ' ') {
+        e.preventDefault();
+        if (opts[active]) choose(opts[active]);
+        return;
+      }
+      if (k.length === 1 && /\S/.test(k)) { e.preventDefault(); jumpTo(k.toLowerCase()); }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!isOpen() || menu.contains(e.target) || field.contains(e.target)) return;
+      close(false);
+    });
+
+    /* the panel is pinned to the viewport, so it has to be re-anchored whenever
+       the field moves under it — bar the list scrolling itself */
+    var reanchor = function (e) {
+      if (isOpen() && (!e || e.target !== menu)) place();
+    };
+    window.addEventListener('resize', reanchor);
+    window.addEventListener('scroll', reanchor, true);
+
+    select.addEventListener('change', sync);
+    if (form) {
+      form.addEventListener('reset', function () {
+        close(false);
+        window.setTimeout(sync, 0); // the reset lands after this event
+      });
+    }
+
+    sync();
+  };
+
   var initBookingForm = function (form) {
     var shell = form.closest('.book-shell');
     var formPane = shell.querySelector('.book-form-pane');
@@ -228,6 +448,9 @@ document.addEventListener('DOMContentLoaded', function () {
       syncSelect(sel);
       sel.addEventListener('change', function () { syncSelect(sel); });
     });
+
+    var serviceSelect = form.querySelector('.bf-field-service select');
+    if (serviceSelect) initServicePicker(serviceSelect);
 
     var phoneEl = field('phone');
     if (phoneEl) {
@@ -257,14 +480,13 @@ document.addEventListener('DOMContentLoaded', function () {
       };
 
       check('name', val('name').length >= 2);
-      check('email', /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val('email')));
       check('phone', /^[6-9]\d{9}$/.test(val('phone')));
       check('service', val('service') !== '');
       check('date', val('date') !== '');
-      check('time', val('time') !== '');
 
       if (bad.length) {
-        bad[0].focus({ preventScroll: true });
+        // the service select is hidden behind its picker — focus that instead
+        (bad[0].pickTrigger || bad[0]).focus({ preventScroll: true });
         scrollToEl(bad[0].closest('.bf-field') || bad[0]);
       }
       return bad.length === 0;
@@ -289,12 +511,9 @@ document.addEventListener('DOMContentLoaded', function () {
       var rows = [
         ['Name', name],
         ['Phone', '+91 ' + val('phone')],
-        ['Email', val('email')],
         ['Service', label('service')],
-        ['Preferred Date', prettyDate(val('date'))],
-        ['Preferred Time', label('time')]
+        ['Preferred Date', prettyDate(val('date'))]
       ];
-      if (val('message')) rows.push(['Message', val('message')]);
 
       var lines = ['*New Session Booking Request*', ''];
       rows.forEach(function (r) { lines.push(r[0] + ': ' + r[1]); });
@@ -440,6 +659,23 @@ document.addEventListener('DOMContentLoaded', function () {
         scrollToEl(inlineShell);
       });
     }
+  }
+
+  /* ---------- Floating WhatsApp button ----------
+     The button itself is a plain link to book.php, so the handlers above pick
+     it up and open the popup (or scroll to the inline form on book.php).
+     All we do here is flash the "Book Your Session Now" greeting once on
+     arrival, so visitors notice the button is a way to book.               */
+  var waFloat = document.getElementById('waFloat');
+
+  if (waFloat) {
+    var TIP_DELAY = 700;   // let the page settle before the greeting appears
+    var TIP_HOLD  = 2600;  // how long it stays fully readable, then it fades
+
+    window.setTimeout(function () {
+      waFloat.classList.add('tip-on');
+      window.setTimeout(function () { waFloat.classList.remove('tip-on'); }, TIP_HOLD);
+    }, TIP_DELAY);
   }
 
 });
